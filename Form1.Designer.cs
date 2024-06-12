@@ -46,6 +46,7 @@
             this.b_openfilepath = new System.Windows.Forms.Button();
             this.b_openFile = new System.Windows.Forms.Button();
             this.m_isOverwrite = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -238,12 +239,22 @@
             this.m_isOverwrite.Text = "覆盖原文件";
             this.m_isOverwrite.UseVisualStyleBackColor = true;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(113, 393);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(187, 20);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "52pojie.cn sakura-galaxy";
+            // 
             // Form1
             // 
             this.AcceptButton = this.b_ProcessFile;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(416, 439);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.m_isOverwrite);
             this.Controls.Add(this.b_openFile);
             this.Controls.Add(this.b_openfilepath);
@@ -287,6 +298,7 @@
         private System.Windows.Forms.TextBox m_lastModifiedBy;
         private System.Windows.Forms.Button b_openFile;
         private System.Windows.Forms.CheckBox m_isOverwrite;
+        private System.Windows.Forms.Label label7;
     }
 }
 

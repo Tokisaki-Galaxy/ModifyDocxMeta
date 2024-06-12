@@ -1,1 +1,11 @@
-# ModifyTotalEditingTime# ModifyDocxMeta
+# ModifyDocxMeta
+
+## 网页
+[52pojie论坛地址](https://www.52pojie.cn/thread-1933858-1-1.html)
+
+## 前言
+
+docx文件里面可以记录你写这个文档的编辑时间，修改人，修改时间。这个信息有时候会带来大问题。比如你用ai写了一篇2000字论文 但是老师一看总编辑时间只有10分钟，那你可能得好好解释咋写的了。
+
+c-sharp（++++）写的，第一次用c#做的练手小项目，熟悉熟悉c#语法。
+不得不说C++++真的比C++写的舒服多了，加其他库也方便多了。

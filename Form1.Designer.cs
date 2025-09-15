@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.b_ProcessFile = new System.Windows.Forms.Button();
             this.m_filePath = new System.Windows.Forms.TextBox();
             this.m_totaltime = new System.Windows.Forms.TextBox();
@@ -264,6 +265,7 @@
             this.Controls.Add(this.m_filePath);
             this.Controls.Add(this.b_ProcessFile);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "Form1";

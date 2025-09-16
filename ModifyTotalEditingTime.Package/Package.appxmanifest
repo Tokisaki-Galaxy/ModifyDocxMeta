@@ -9,7 +9,7 @@
   <Identity
     Name="tokisaki.ModifyDocxMeta"
     Publisher="CN=7E7C19B4-1EA7-45C3-814A-12FED377C990"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <Properties>
     <DisplayName>ModifyDocxMeta</DisplayName>

@@ -46,25 +46,50 @@ namespace ModifyTotalEditingTime
 
 		private void b_ProcessFile_Click(object sender, EventArgs e)
 		{
-			ModifyFileMetaData modifyFileMetaData = new ModifyFileMetaData(m_filePath.Text);
-			try
-			{
-				modifyFileMetaData.ModifyTotalEditingTime(Convert.ToInt32(m_totaltime.Text));
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "异常", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-			}
-			modifyFileMetaData.ModifyCreator(m_creator.Text);
-			modifyFileMetaData.ModifyLastModifiedBy(m_lastModifiedBy.Text);
+            // 创建实例
+            ModifyFileMetaData modifyFileMetaData = ModifyFileMetaData.TryCreate(m_filePath.Text, out string errorMessage);
 
-			modifyFileMetaData.ModifyCreatedDate(modifyFileMetaData.StringToDate(m_createdtime.Text));
-			modifyFileMetaData.ModifyLastChangedDate(modifyFileMetaData.StringToDate(m_modifiedtime.Text));
+            // 同样，必须用 using 语句
+            using (modifyFileMetaData)
+            {
+                if (modifyFileMetaData == null)
+                {
+                    MessageBox.Show(errorMessage, "Failed to process file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-			modifyFileMetaData.SetOverwrite(m_isOverwrite.Checked);
-			modifyFileMetaData.Save();
-		}
+                try
+                {
+                    modifyFileMetaData.ModifyTotalEditingTime(Convert.ToInt32(m_totaltime.Text));
+                    modifyFileMetaData.ModifyCreator(m_creator.Text);
+                    modifyFileMetaData.ModifyLastModifiedBy(m_lastModifiedBy.Text);
+                    modifyFileMetaData.ModifyCreatedDate(DateTime.Parse(m_createdtime.Text));
+                    modifyFileMetaData.ModifyLastChangedDate(DateTime.Parse(m_modifiedtime.Text));
+
+                    modifyFileMetaData.SetOverwrite(m_isOverwrite.Checked);
+
+                    // 调用新的 Save 方法并检查结果
+                    var result = modifyFileMetaData.Save();
+                    if (result.Success)
+                    {
+                        MessageBox.Show(result.Message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(result.Message, "Save fail", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                catch (FormatException ex)
+                {
+                    MessageBox.Show("The input format is incorrect. Please check the editor-in-chief time (should be a number) and date format. \n error：" + ex.Message, "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    // 捕获其他所有未预料到的异常
+                    MessageBox.Show("An unknown error occurred：" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            } // fileMetaData.Dispose() 会在这里被自动调用
+        }
 
 		private void b_openFile_Click(object sender, EventArgs e)
         {
@@ -73,20 +98,30 @@ namespace ModifyTotalEditingTime
             m_modifiedtime.Clear();
             m_creator.Clear();
 			m_lastModifiedBy.Clear();
-			try
-			{
-				ModifyFileMetaData FileMetaData = new ModifyFileMetaData(m_filePath.Text);
-				m_totaltime.AppendText(FileMetaData.GetTotalEditingTime());
-				m_creator.AppendText(FileMetaData.GetCreator());
-				m_lastModifiedBy.AppendText(FileMetaData.GetLastModifiedBy());
-				m_createdtime.AppendText(FileMetaData.GetCreatedDate().ToString());
-				m_modifiedtime.AppendText(FileMetaData.GetLastChangedDate().ToString());
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "异常", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-			}
-		}
+            // 使用新的 TryCreate 模式
+            ModifyFileMetaData fileMetaData = ModifyFileMetaData.TryCreate(m_filePath.Text, out string errorMessage);
+
+            // 必须用 using 语句来确保 Dispose 被调用，从而删除临时文件
+            using (fileMetaData)
+            {
+                if (fileMetaData == null)
+                {
+                    MessageBox.Show(errorMessage, "Failed to open file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 现在可以安全地获取数据，因为构造函数已经成功
+                m_totaltime.AppendText(fileMetaData.GetTotalEditingTime() ?? "0");
+                m_creator.AppendText(fileMetaData.GetCreator() ?? "");
+                m_lastModifiedBy.AppendText(fileMetaData.GetLastModifiedBy() ?? "");
+
+                // 处理可能为 null 的日期
+                DateTime? createdDate = fileMetaData.GetCreatedDate();
+                m_createdtime.AppendText(createdDate.HasValue ? createdDate.Value.ToString() : "");
+
+                DateTime? modifiedDate = fileMetaData.GetLastChangedDate();
+                m_modifiedtime.AppendText(modifiedDate.HasValue ? modifiedDate.Value.ToString() : "");
+            } // fileMetaData.Dispose() 会在这里被自动调用
+        }
 	}
 }
